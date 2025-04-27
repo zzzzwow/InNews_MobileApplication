@@ -722,13 +722,24 @@ class _FindingsPageState extends State<FindingsPage> {
                                 height: 10,
                               ),
                               Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
                                 children: [
-                                  ElevatedButton(
-                                      onPressed: () {}, child: Text("按钮1")),
-                                  ElevatedButton(
-                                      onPressed: () {}, child: Text("按钮1")),
-                                  ElevatedButton(
-                                      onPressed: () {}, child: Text("按钮1")),
+                                  IconButton(
+                                    icon: const Icon(Icons.edit_note),
+                                    color: Colors.grey[400],
+                                    onPressed: () {},
+                                  ),
+                                  IconButton(
+                                    icon: const Icon(Icons.bookmark_border),
+                                    color: Colors.grey[400],
+                                    onPressed: () {},
+                                  ),
+                                  IconButton(
+                                    icon: const Icon(Icons.share),
+                                    color: Colors.grey[400],
+                                    onPressed: () {},
+                                  ),
                                 ],
                               )
                             ],
@@ -766,14 +777,78 @@ class _FindingsPageState extends State<FindingsPage> {
   }
 }
 
-class CollectionsPage extends StatelessWidget {
+class CollectionsPage extends StatefulWidget {
   const CollectionsPage({super.key});
 
   @override
+  State<CollectionsPage> createState() => _CollectionsPageState();
+}
+
+class _CollectionsPageState extends State<CollectionsPage> {
+  String selectedTab = 'Notes'; // 默认选中Notes标签
+
+  @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(
-        child: Text('Collections Page'),
+    return Scaffold(
+      backgroundColor: Colors.black,
+      body: SafeArea(
+        child: Column(
+          children: [
+            // 顶部标签选择器
+            Container(
+              padding: const EdgeInsets.all(20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  _buildTab('Notes'),
+                  const SizedBox(width: 30),
+                  _buildTab('Collected News'),
+                ],
+              ),
+            ),
+            // 内容区域
+            Expanded(
+              child: Center(
+                child: Text(
+                  selectedTab == 'Notes'
+                      ? 'Notes Content'
+                      : 'Collected News Content',
+                  style: const TextStyle(color: Colors.white),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTab(String title) {
+    bool isSelected = selectedTab == title;
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          selectedTab = title;
+        });
+      },
+      child: Column(
+        children: [
+          Text(
+            title,
+            style: TextStyle(
+              color: isSelected ? Colors.white : Colors.grey,
+              fontSize: 16,
+              fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+            ),
+          ),
+          const SizedBox(height: 8),
+          // 选中标识线
+          Container(
+            height: 2,
+            width: 40,
+            color: isSelected ? Colors.white : Colors.transparent,
+          ),
+        ],
       ),
     );
   }
