@@ -724,9 +724,9 @@ class _FindingsPageState extends State<FindingsPage> {
                                 height: 10,
                               ),
                               Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
+                                mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
+                                  const SizedBox(width: 20),
                                   IconButton(
                                     icon: const Icon(Icons.edit_note),
                                     color: Colors.grey[400],
@@ -811,6 +811,7 @@ class _FindingsPageState extends State<FindingsPage> {
                                       );
                                     },
                                   ),
+                                  const SizedBox(width: 10),
                                   IconButton(
                                     icon: const Icon(Icons.bookmark_border),
                                     color: Colors.grey[400],
@@ -832,11 +833,6 @@ class _FindingsPageState extends State<FindingsPage> {
                                         ),
                                       );
                                     },
-                                  ),
-                                  IconButton(
-                                    icon: const Icon(Icons.share),
-                                    color: Colors.grey[400],
-                                    onPressed: () {},
                                   ),
                                 ],
                               )
@@ -884,7 +880,15 @@ class CollectionsPage extends StatefulWidget {
 
 class _CollectionsPageState extends State<CollectionsPage> {
   String selectedTab = 'Notes';
-  String selectedCategory = 'all'; // 添加分类选择
+  String selectedCategory = 'all';
+  final TextEditingController _searchController = TextEditingController();
+  String _searchText = '';
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -950,108 +954,160 @@ class _CollectionsPageState extends State<CollectionsPage> {
     final sortedNotes = List<Note>.from(NoteData.notes)
       ..sort((a, b) => b.createTime.compareTo(a.createTime));
 
-    return ListView.builder(
-      padding: const EdgeInsets.all(20),
-      itemCount: sortedNotes.length,
-      itemBuilder: (context, index) {
-        final note = sortedNotes[index];
-        return GestureDetector(
-          onTap: () {
-            final news = NewsData.allNews.firstWhere(
-              (news) => news.title == note.newsTitle,
-            );
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => DetailsPage(news: news),
-              ),
-            );
-          },
+    final filteredNotes = _searchText.isEmpty
+        ? sortedNotes
+        : sortedNotes.where((note) {
+            final searchLower = _searchText.toLowerCase();
+            return note.content.toLowerCase().contains(searchLower) ||
+                note.newsTitle.toLowerCase().contains(searchLower) ||
+                note.newsSummary.toLowerCase().contains(searchLower);
+          }).toList();
+
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
           child: Container(
-            margin: const EdgeInsets.only(bottom: 20),
             decoration: BoxDecoration(
               color: Colors.grey[900],
-              borderRadius: BorderRadius.circular(15),
+              borderRadius: BorderRadius.circular(12),
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // 新闻信息部分
-                Row(
-                  children: [
-                    // 新闻图片
-                    ClipRRect(
-                      borderRadius: const BorderRadius.only(
-                        topLeft: Radius.circular(15),
-                        bottomLeft: Radius.circular(15),
-                      ),
-                      child: Image.asset(
-                        note.newsImageUrl,
-                        width: 100,
-                        height: 100,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                    const SizedBox(width: 15),
-                    // 新闻标题和摘要
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            note.newsTitle,
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          const SizedBox(height: 5),
-                          Text(
-                            note.newsSummary,
-                            style: TextStyle(
-                              color: Colors.grey[400],
-                              fontSize: 14,
-                            ),
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                // 用户笔记部分
-                Padding(
-                  padding: const EdgeInsets.all(15),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        note.content,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      Text(
-                        _formatDateTime(note.createTime),
-                        style: TextStyle(
-                          color: Colors.grey[400],
-                          fontSize: 12,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
+            child: TextField(
+              controller: _searchController,
+              style: const TextStyle(color: Colors.white),
+              decoration: InputDecoration(
+                hintText: 'Search notes...',
+                hintStyle: TextStyle(color: Colors.grey[600]),
+                prefixIcon: Icon(Icons.search, color: Colors.grey[600]),
+                border: InputBorder.none,
+                contentPadding:
+                    const EdgeInsets.symmetric(horizontal: 15, vertical: 12),
+              ),
+              onChanged: (value) {
+                setState(() {
+                  _searchText = value;
+                });
+              },
             ),
           ),
-        );
-      },
+        ),
+        Expanded(
+          child: filteredNotes.isEmpty && _searchText.isNotEmpty
+              ? Center(
+                  child: Text(
+                    'No related result',
+                    style: TextStyle(
+                      color: Colors.grey[400],
+                      fontSize: 16,
+                    ),
+                  ),
+                )
+              : ListView.builder(
+                  padding: const EdgeInsets.all(20),
+                  itemCount: filteredNotes.length,
+                  itemBuilder: (context, index) {
+                    final note = filteredNotes[index];
+                    return GestureDetector(
+                      onTap: () {
+                        final news = NewsData.allNews.firstWhere(
+                          (news) => news.title == note.newsTitle,
+                        );
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => DetailsPage(news: news),
+                          ),
+                        );
+                      },
+                      child: Container(
+                        margin: const EdgeInsets.only(bottom: 20),
+                        decoration: BoxDecoration(
+                          color: Colors.grey[900],
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // 新闻信息部分
+                            Row(
+                              children: [
+                                // 新闻图片
+                                ClipRRect(
+                                  borderRadius: const BorderRadius.only(
+                                    topLeft: Radius.circular(15),
+                                    bottomLeft: Radius.circular(15),
+                                  ),
+                                  child: Image.asset(
+                                    note.newsImageUrl,
+                                    width: 100,
+                                    height: 100,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                                const SizedBox(width: 15),
+                                // 新闻标题和摘要
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        note.newsTitle,
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                      const SizedBox(height: 5),
+                                      Text(
+                                        note.newsSummary,
+                                        style: TextStyle(
+                                          color: Colors.grey[400],
+                                          fontSize: 14,
+                                        ),
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                            // 用户笔记部分
+                            Padding(
+                              padding: const EdgeInsets.all(15),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    note.content,
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 10),
+                                  Text(
+                                    _formatDateTime(note.createTime),
+                                    style: TextStyle(
+                                      color: Colors.grey[400],
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                ),
+        ),
+      ],
     );
   }
 
@@ -1121,7 +1177,7 @@ class _CollectionsPageState extends State<CollectionsPage> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => NewsDetailPage(news: item.news),
+                      builder: (context) => DetailsPage(news: item.news),
                     ),
                   );
                 },
