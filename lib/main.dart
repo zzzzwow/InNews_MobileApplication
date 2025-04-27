@@ -2308,8 +2308,7 @@ class NewsDetailPage extends StatelessWidget {
                           _formatDate(news.publishDate),
                           style: TextStyle(
                             color: Colors.grey[400],
-                            fontSize: 16,
-                            height: 1.5,
+                            fontSize: 14,
                           ),
                         ),
                       ],
