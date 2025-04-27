@@ -2,6 +2,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:sensors_plus/sensors_plus.dart';
 import 'models/news_data.dart';
+import 'models/note_data.dart';
 import 'splash.dart';
 
 void main() {
@@ -728,7 +729,86 @@ class _FindingsPageState extends State<FindingsPage> {
                                   IconButton(
                                     icon: const Icon(Icons.edit_note),
                                     color: Colors.grey[400],
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      final textController =
+                                          TextEditingController();
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) => AlertDialog(
+                                          backgroundColor: Colors.grey[900],
+                                          title: const Text(
+                                            'Add Note',
+                                            style:
+                                                TextStyle(color: Colors.white),
+                                          ),
+                                          content: TextField(
+                                            controller: textController,
+                                            style: const TextStyle(
+                                                color: Colors.white),
+                                            decoration: InputDecoration(
+                                              hintText:
+                                                  'Write your note here...',
+                                              hintStyle: TextStyle(
+                                                  color: Colors.grey[400]),
+                                              enabledBorder:
+                                                  UnderlineInputBorder(
+                                                borderSide: BorderSide(
+                                                    color: Colors.grey[700]!),
+                                              ),
+                                              focusedBorder:
+                                                  const UnderlineInputBorder(
+                                                borderSide: BorderSide(
+                                                    color: Colors.white),
+                                              ),
+                                            ),
+                                            maxLines: 5,
+                                          ),
+                                          actions: [
+                                            TextButton(
+                                              onPressed: () =>
+                                                  Navigator.pop(context),
+                                              child: Text(
+                                                'Cancel',
+                                                style: TextStyle(
+                                                    color: Colors.grey[400]),
+                                              ),
+                                            ),
+                                            TextButton(
+                                              onPressed: () {
+                                                if (textController
+                                                    .text.isNotEmpty) {
+                                                  final note = Note(
+                                                    content:
+                                                        textController.text,
+                                                    createTime: DateTime.now(),
+                                                    newsTitle: news.title,
+                                                    newsSummary: news.summary,
+                                                    newsImageUrl: news.imageUrl,
+                                                  );
+                                                  NoteData.notes.add(note);
+                                                  Navigator.pop(context);
+                                                  // 可以添加一个提示
+                                                  ScaffoldMessenger.of(context)
+                                                      .showSnackBar(
+                                                    const SnackBar(
+                                                      content: Text(
+                                                          'Note saved successfully!'),
+                                                      duration:
+                                                          Duration(seconds: 2),
+                                                    ),
+                                                  );
+                                                }
+                                              },
+                                              child: const Text(
+                                                'Save',
+                                                style: TextStyle(
+                                                    color: Colors.white),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                    },
                                   ),
                                   IconButton(
                                     icon: const Icon(Icons.bookmark_border),
@@ -785,7 +865,7 @@ class CollectionsPage extends StatefulWidget {
 }
 
 class _CollectionsPageState extends State<CollectionsPage> {
-  String selectedTab = 'Notes'; // 默认选中Notes标签
+  String selectedTab = 'Notes';
 
   @override
   Widget build(BuildContext context) {
@@ -808,14 +888,14 @@ class _CollectionsPageState extends State<CollectionsPage> {
             ),
             // 内容区域
             Expanded(
-              child: Center(
-                child: Text(
-                  selectedTab == 'Notes'
-                      ? 'Notes Content'
-                      : 'Collected News Content',
-                  style: const TextStyle(color: Colors.white),
-                ),
-              ),
+              child: selectedTab == 'Notes'
+                  ? _buildNotesView()
+                  : const Center(
+                      child: Text(
+                        'Collected News Content',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
             ),
           ],
         ),
@@ -837,12 +917,11 @@ class _CollectionsPageState extends State<CollectionsPage> {
             title,
             style: TextStyle(
               color: isSelected ? Colors.white : Colors.grey,
-              fontSize: 16,
-              fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+              fontSize: 20, // 修改为与Findings页面一致的字体大小
+              fontWeight: FontWeight.bold,
             ),
           ),
           const SizedBox(height: 8),
-          // 选中标识线
           Container(
             height: 2,
             width: 40,
@@ -851,6 +930,103 @@ class _CollectionsPageState extends State<CollectionsPage> {
         ],
       ),
     );
+  }
+
+  Widget _buildNotesView() {
+    return ListView.builder(
+      padding: const EdgeInsets.all(20),
+      itemCount: NoteData.notes.length,
+      itemBuilder: (context, index) {
+        final note = NoteData.notes[index];
+        return Container(
+          margin: const EdgeInsets.only(bottom: 20),
+          decoration: BoxDecoration(
+            color: Colors.grey[900],
+            borderRadius: BorderRadius.circular(15),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // 新闻信息部分
+              Row(
+                children: [
+                  // 新闻图片
+                  ClipRRect(
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(15),
+                      bottomLeft: Radius.circular(15),
+                    ),
+                    child: Image.asset(
+                      note.newsImageUrl,
+                      width: 100,
+                      height: 100,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  const SizedBox(width: 15),
+                  // 新闻标题和摘要
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          note.newsTitle,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        const SizedBox(height: 5),
+                        Text(
+                          note.newsSummary,
+                          style: TextStyle(
+                            color: Colors.grey[400],
+                            fontSize: 14,
+                          ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              // 用户笔记部分
+              Padding(
+                padding: const EdgeInsets.all(15),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      note.content,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    Text(
+                      _formatDateTime(note.createTime),
+                      style: TextStyle(
+                        color: Colors.grey[400],
+                        fontSize: 12,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  String _formatDateTime(DateTime dateTime) {
+    return '${dateTime.year}-${dateTime.month.toString().padLeft(2, '0')}-${dateTime.day.toString().padLeft(2, '0')} ${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}';
   }
 }
 
