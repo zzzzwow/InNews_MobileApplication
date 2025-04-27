@@ -4,6 +4,7 @@ import 'package:sensors_plus/sensors_plus.dart';
 import 'models/news_data.dart';
 import 'models/note_data.dart';
 import 'splash.dart';
+import 'models/collected_news_data.dart';
 
 void main() {
   runApp(const MyApp());
@@ -813,7 +814,24 @@ class _FindingsPageState extends State<FindingsPage> {
                                   IconButton(
                                     icon: const Icon(Icons.bookmark_border),
                                     color: Colors.grey[400],
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      // 添加到收藏
+                                      CollectedNewsData.collectedNews.add(
+                                        CollectedNews(
+                                          news: news,
+                                          collectTime: DateTime.now(),
+                                        ),
+                                      );
+                                      // 显示提示
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        const SnackBar(
+                                          content: Text(
+                                              'News collected successfully!'),
+                                          duration: Duration(seconds: 2),
+                                        ),
+                                      );
+                                    },
                                   ),
                                   IconButton(
                                     icon: const Icon(Icons.share),
@@ -866,6 +884,7 @@ class CollectionsPage extends StatefulWidget {
 
 class _CollectionsPageState extends State<CollectionsPage> {
   String selectedTab = 'Notes';
+  String selectedCategory = 'all'; // 添加分类选择
 
   @override
   Widget build(BuildContext context) {
@@ -890,12 +909,7 @@ class _CollectionsPageState extends State<CollectionsPage> {
             Expanded(
               child: selectedTab == 'Notes'
                   ? _buildNotesView()
-                  : const Center(
-                      child: Text(
-                        'Collected News Content',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
+                  : _buildCollectedNewsView(),
             ),
           ],
         ),
@@ -1038,6 +1052,150 @@ class _CollectionsPageState extends State<CollectionsPage> {
           ),
         );
       },
+    );
+  }
+
+  Widget _buildCollectedNewsView() {
+    // 根据选择的分类筛选新闻
+    final filteredNews = selectedCategory == 'all'
+        ? CollectedNewsData.collectedNews
+        : CollectedNewsData.collectedNews
+            .where((item) => item.news.category == selectedCategory)
+            .toList();
+
+    // 按收藏时间倒序排序
+    filteredNews.sort((a, b) => b.collectTime.compareTo(a.collectTime));
+
+    return Column(
+      children: [
+        // 分类选项
+        Container(
+          height: 40,
+          margin: const EdgeInsets.only(bottom: 20),
+          child: ListView(
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            children: ['all', ...NewsData.getAllCategories()]
+                .map((category) => Padding(
+                      padding: const EdgeInsets.only(right: 10),
+                      child: GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            selectedCategory = category;
+                          });
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          decoration: BoxDecoration(
+                            color: selectedCategory == category
+                                ? Colors.white
+                                : Colors.grey[900],
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Center(
+                            child: Text(
+                              category,
+                              style: TextStyle(
+                                color: selectedCategory == category
+                                    ? Colors.black
+                                    : Colors.grey[400],
+                                fontSize: 14,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ))
+                .toList(),
+          ),
+        ),
+        // 新闻列表
+        Expanded(
+          child: ListView.builder(
+            padding: const EdgeInsets.all(20),
+            itemCount: filteredNews.length,
+            itemBuilder: (context, index) {
+              final item = filteredNews[index];
+              return GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => NewsDetailPage(news: item.news),
+                    ),
+                  );
+                },
+                child: Container(
+                  margin: const EdgeInsets.only(bottom: 20),
+                  decoration: BoxDecoration(
+                    color: Colors.grey[900],
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          ClipRRect(
+                            borderRadius: const BorderRadius.only(
+                              topLeft: Radius.circular(15),
+                              bottomLeft: Radius.circular(15),
+                            ),
+                            child: Image.asset(
+                              item.news.imageUrl,
+                              width: 100,
+                              height: 100,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                          const SizedBox(width: 15),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  item.news.title,
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                const SizedBox(height: 5),
+                                Text(
+                                  item.news.summary,
+                                  style: TextStyle(
+                                    color: Colors.grey[400],
+                                    fontSize: 14,
+                                  ),
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(15),
+                        child: Text(
+                          _formatDateTime(item.collectTime),
+                          style: TextStyle(
+                            color: Colors.grey[400],
+                            fontSize: 12,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+      ],
     );
   }
 
