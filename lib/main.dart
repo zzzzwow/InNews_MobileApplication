@@ -2,7 +2,9 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:sensors_plus/sensors_plus.dart';
 import 'models/news_data.dart';
+import 'models/note_data.dart';
 import 'splash.dart';
+import 'models/collected_news_data.dart';
 
 void main() {
   runApp(const MyApp());
@@ -573,12 +575,28 @@ class _FindingsPageState extends State<FindingsPage> {
                       ),
                     ),
                   ),
-                  const Text(
-                    'Finding News',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
+                  Center(
+                    child: RichText(
+                      text: const TextSpan(
+                        children: [
+                          TextSpan(
+                            text: 'Finding ',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          TextSpan(
+                            text: 'News',
+                            style: TextStyle(
+                              color: Colors.red,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                   Container(
@@ -722,13 +740,116 @@ class _FindingsPageState extends State<FindingsPage> {
                                 height: 10,
                               ),
                               Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
-                                  ElevatedButton(
-                                      onPressed: () {}, child: Text("按钮1")),
-                                  ElevatedButton(
-                                      onPressed: () {}, child: Text("按钮1")),
-                                  ElevatedButton(
-                                      onPressed: () {}, child: Text("按钮1")),
+                                  const SizedBox(width: 20),
+                                  IconButton(
+                                    icon: const Icon(Icons.edit_note),
+                                    color: Colors.grey[400],
+                                    onPressed: () {
+                                      final textController =
+                                          TextEditingController();
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) => AlertDialog(
+                                          backgroundColor: Colors.grey[900],
+                                          title: const Text(
+                                            'Add Note',
+                                            style:
+                                                TextStyle(color: Colors.white),
+                                          ),
+                                          content: TextField(
+                                            controller: textController,
+                                            style: const TextStyle(
+                                                color: Colors.white),
+                                            decoration: InputDecoration(
+                                              hintText:
+                                                  'Write your note here...',
+                                              hintStyle: TextStyle(
+                                                  color: Colors.grey[400]),
+                                              enabledBorder:
+                                                  UnderlineInputBorder(
+                                                borderSide: BorderSide(
+                                                    color: Colors.grey[700]!),
+                                              ),
+                                              focusedBorder:
+                                                  const UnderlineInputBorder(
+                                                borderSide: BorderSide(
+                                                    color: Colors.white),
+                                              ),
+                                            ),
+                                            maxLines: 5,
+                                          ),
+                                          actions: [
+                                            TextButton(
+                                              onPressed: () =>
+                                                  Navigator.pop(context),
+                                              child: Text(
+                                                'Cancel',
+                                                style: TextStyle(
+                                                    color: Colors.grey[400]),
+                                              ),
+                                            ),
+                                            TextButton(
+                                              onPressed: () {
+                                                if (textController
+                                                    .text.isNotEmpty) {
+                                                  final note = Note(
+                                                    content:
+                                                        textController.text,
+                                                    createTime: DateTime.now(),
+                                                    newsTitle: news.title,
+                                                    newsSummary: news.summary,
+                                                    newsImageUrl: news.imageUrl,
+                                                  );
+                                                  NoteData.notes.add(note);
+                                                  Navigator.pop(context);
+                                                  // 可以添加一个提示
+                                                  ScaffoldMessenger.of(context)
+                                                      .showSnackBar(
+                                                    const SnackBar(
+                                                      content: Text(
+                                                          'Note saved successfully!'),
+                                                      duration:
+                                                          Duration(seconds: 2),
+                                                    ),
+                                                  );
+                                                }
+                                              },
+                                              child: const Text(
+                                                'Save',
+                                                style: TextStyle(
+                                                    color: Colors.white),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                  const SizedBox(width: 10),
+                                  IconButton(
+                                    icon: const Icon(Icons.bookmark_border),
+                                    color: Colors.grey[400],
+                                    onPressed: () {
+                                      // 添加到收藏
+                                      CollectedNewsData.collectedNews.add(
+                                        CollectedNews(
+                                          news: news,
+                                          collectTime: DateTime.now(),
+                                        ),
+                                      );
+                                      // 显示提示
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        const SnackBar(
+                                          content: Text(
+                                              'News collected successfully!'),
+                                          duration: Duration(seconds: 2),
+                                        ),
+                                      );
+                                    },
+                                  ),
                                 ],
                               )
                             ],
@@ -766,16 +887,392 @@ class _FindingsPageState extends State<FindingsPage> {
   }
 }
 
-class CollectionsPage extends StatelessWidget {
+class CollectionsPage extends StatefulWidget {
   const CollectionsPage({super.key});
 
   @override
+  State<CollectionsPage> createState() => _CollectionsPageState();
+}
+
+class _CollectionsPageState extends State<CollectionsPage> {
+  String selectedTab = 'Notes';
+  String selectedCategory = 'all';
+  final TextEditingController _searchController = TextEditingController();
+  String _searchText = '';
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(
-        child: Text('Collections Page'),
+    return Scaffold(
+      backgroundColor: Colors.black,
+      body: SafeArea(
+        child: Column(
+          children: [
+            // 顶部标签选择器
+            Container(
+              padding: const EdgeInsets.all(20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  _buildTab('Notes'),
+                  const SizedBox(width: 30),
+                  _buildTab('Collected News'),
+                ],
+              ),
+            ),
+            // 内容区域
+            Expanded(
+              child: selectedTab == 'Notes'
+                  ? _buildNotesView()
+                  : _buildCollectedNewsView(),
+            ),
+          ],
+        ),
       ),
     );
+  }
+
+  Widget _buildTab(String title) {
+    bool isSelected = selectedTab == title;
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          selectedTab = title;
+        });
+      },
+      child: Column(
+        children: [
+          Text(
+            title,
+            style: TextStyle(
+              color: isSelected ? Colors.white : Colors.grey,
+              fontSize: 20, // 修改为与Findings页面一致的字体大小
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Container(
+            height: 2,
+            width: 40,
+            color: isSelected ? Colors.white : Colors.transparent,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildNotesView() {
+    final sortedNotes = List<Note>.from(NoteData.notes)
+      ..sort((a, b) => b.createTime.compareTo(a.createTime));
+
+    final filteredNotes = _searchText.isEmpty
+        ? sortedNotes
+        : sortedNotes.where((note) {
+            final searchLower = _searchText.toLowerCase();
+            return note.content.toLowerCase().contains(searchLower) ||
+                note.newsTitle.toLowerCase().contains(searchLower) ||
+                note.newsSummary.toLowerCase().contains(searchLower);
+          }).toList();
+
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.grey[900],
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: TextField(
+              controller: _searchController,
+              style: const TextStyle(color: Colors.white),
+              decoration: InputDecoration(
+                hintText: 'Search notes...',
+                hintStyle: TextStyle(color: Colors.grey[600]),
+                prefixIcon: Icon(Icons.search, color: Colors.grey[600]),
+                border: InputBorder.none,
+                contentPadding:
+                    const EdgeInsets.symmetric(horizontal: 15, vertical: 12),
+              ),
+              onChanged: (value) {
+                setState(() {
+                  _searchText = value;
+                });
+              },
+            ),
+          ),
+        ),
+        Expanded(
+          child: filteredNotes.isEmpty && _searchText.isNotEmpty
+              ? Center(
+                  child: Text(
+                    'No related result',
+                    style: TextStyle(
+                      color: Colors.grey[400],
+                      fontSize: 16,
+                    ),
+                  ),
+                )
+              : ListView.builder(
+                  padding: const EdgeInsets.all(20),
+                  itemCount: filteredNotes.length,
+                  itemBuilder: (context, index) {
+                    final note = filteredNotes[index];
+                    return GestureDetector(
+                      onTap: () {
+                        final news = NewsData.allNews.firstWhere(
+                          (news) => news.title == note.newsTitle,
+                        );
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => DetailsPage(news: news),
+                          ),
+                        );
+                      },
+                      child: Container(
+                        margin: const EdgeInsets.only(bottom: 20),
+                        decoration: BoxDecoration(
+                          color: Colors.grey[900],
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // 新闻信息部分
+                            Row(
+                              children: [
+                                // 新闻图片
+                                ClipRRect(
+                                  borderRadius: const BorderRadius.only(
+                                    topLeft: Radius.circular(15),
+                                    bottomLeft: Radius.circular(15),
+                                  ),
+                                  child: Image.asset(
+                                    note.newsImageUrl,
+                                    width: 100,
+                                    height: 100,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                                const SizedBox(width: 15),
+                                // 新闻标题和摘要
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        note.newsTitle,
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                      const SizedBox(height: 5),
+                                      Text(
+                                        note.newsSummary,
+                                        style: TextStyle(
+                                          color: Colors.grey[400],
+                                          fontSize: 14,
+                                        ),
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                            // 用户笔记部分
+                            Padding(
+                              padding: const EdgeInsets.all(15),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    note.content,
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 10),
+                                  Text(
+                                    _formatDateTime(note.createTime),
+                                    style: TextStyle(
+                                      color: Colors.grey[400],
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildCollectedNewsView() {
+    // 根据选择的分类筛选新闻
+    final filteredNews = selectedCategory == 'all'
+        ? CollectedNewsData.collectedNews
+        : CollectedNewsData.collectedNews
+            .where((item) => item.news.category == selectedCategory)
+            .toList();
+
+    // 按收藏时间倒序排序
+    filteredNews.sort((a, b) => b.collectTime.compareTo(a.collectTime));
+
+    return Column(
+      children: [
+        // 分类选项
+        Container(
+          height: 40,
+          margin: const EdgeInsets.only(bottom: 20),
+          child: ListView(
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            children: ['all', ...NewsData.getAllCategories()]
+                .map((category) => Padding(
+                      padding: const EdgeInsets.only(right: 10),
+                      child: GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            selectedCategory = category;
+                          });
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          decoration: BoxDecoration(
+                            color: selectedCategory == category
+                                ? Colors.white
+                                : Colors.grey[900],
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Center(
+                            child: Text(
+                              category,
+                              style: TextStyle(
+                                color: selectedCategory == category
+                                    ? Colors.black
+                                    : Colors.grey[400],
+                                fontSize: 14,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ))
+                .toList(),
+          ),
+        ),
+        // 新闻列表
+        Expanded(
+          child: ListView.builder(
+            padding: const EdgeInsets.all(20),
+            itemCount: filteredNews.length,
+            itemBuilder: (context, index) {
+              final item = filteredNews[index];
+              return GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => DetailsPage(news: item.news),
+                    ),
+                  );
+                },
+                child: Container(
+                  margin: const EdgeInsets.only(bottom: 20),
+                  decoration: BoxDecoration(
+                    color: Colors.grey[900],
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          ClipRRect(
+                            borderRadius: const BorderRadius.only(
+                              topLeft: Radius.circular(15),
+                              bottomLeft: Radius.circular(15),
+                            ),
+                            child: Image.asset(
+                              item.news.imageUrl,
+                              width: 100,
+                              height: 100,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                          const SizedBox(width: 15),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  item.news.title,
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                const SizedBox(height: 5),
+                                Text(
+                                  item.news.summary,
+                                  style: TextStyle(
+                                    color: Colors.grey[400],
+                                    fontSize: 14,
+                                  ),
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(15),
+                        child: Text(
+                          _formatDateTime(item.collectTime),
+                          style: TextStyle(
+                            color: Colors.grey[400],
+                            fontSize: 12,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  String _formatDateTime(DateTime dateTime) {
+    return '${dateTime.year}-${dateTime.month.toString().padLeft(2, '0')}-${dateTime.day.toString().padLeft(2, '0')} ${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}';
   }
 }
 
@@ -787,199 +1284,146 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingPageState extends State<SettingsPage> {
-  // 隐私设置开关状态
-  bool readingStatusEnabled = true;
-  bool readingTimeEnabled = true;
-  bool bookListEnabled = true;
-
-  Widget _buildSwitchRow(String title, bool value, Function(bool) onChanged) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            title,
-            style: const TextStyle(fontSize: 14),
-          ),
-          Switch(
-            value: value,
-            onChanged: onChanged,
-            activeColor: Colors.black,
-          ),
-        ],
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      body: Padding(
-        padding: const EdgeInsets.fromLTRB(25, 60, 25, 16),
+      backgroundColor: Colors.black,
+      body: SafeArea(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // 用户信息部分
-            Row(
-              children: [
-                Container(
-                  width: 80,
-                  height: 80,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Colors.grey[300],
-                  ),
-                ),
-                const SizedBox(width: 20),
-                const Text(
-                  'User',
+            // 顶部标题栏
+            Container(
+              padding: const EdgeInsets.all(20),
+              child: const Center(
+                child: Text(
+                  'Settings',
                   style: TextStyle(
+                    color: Colors.white,
                     fontSize: 20,
-                    fontWeight: FontWeight.w500,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
-                const Spacer(),
-              ],
-            ),
-            const SizedBox(height: 30),
-
-            // My Booklight 部分
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              decoration: BoxDecoration(
-                color: Colors.grey[200],
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: const Row(
-                children: [
-                  Text(
-                    'My Booklight',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  Spacer(),
-                  Icon(Icons.menu, color: Colors.black),
-                ],
               ),
             ),
-            const SizedBox(height: 20),
-
-            // 在线状态
-            Padding(
-              padding: const EdgeInsets.only(left: 5),
-              child: Row(
-                children: [
-                  const Icon(Icons.book_outlined, color: Colors.black),
-                  const SizedBox(width: 10),
-                  const Text(
-                    'online',
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.green,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 30),
-
-            // 隐私设置部分
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Colors.grey[200],
-                borderRadius: BorderRadius.circular(20),
-              ),
+            // 设置选项列表
+            Expanded(
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    'Privacy Setting',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
+                  Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Column(
+                      children: [
+                        // 账户信息
+                        Container(
+                          padding: const EdgeInsets.all(15),
+                          decoration: BoxDecoration(
+                            color: Colors.grey[900],
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: const Row(
+                            children: [
+                              Text(
+                                'Account Information',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                ),
+                              ),
+                              Spacer(),
+                              Icon(
+                                Icons.arrow_forward_ios,
+                                color: Colors.grey,
+                                size: 16,
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        // 隐私设置
+                        Container(
+                          padding: const EdgeInsets.all(15),
+                          decoration: BoxDecoration(
+                            color: Colors.grey[900],
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: const Row(
+                            children: [
+                              Text(
+                                'Privacy',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                ),
+                              ),
+                              Spacer(),
+                              Icon(
+                                Icons.arrow_forward_ios,
+                                color: Colors.grey,
+                                size: 16,
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        // 用户服务中心
+                        Container(
+                          padding: const EdgeInsets.all(15),
+                          decoration: BoxDecoration(
+                            color: Colors.grey[900],
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: const Row(
+                            children: [
+                              Text(
+                                "User's Service Center", // 修改文本
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                ),
+                              ),
+                              Spacer(),
+                              Icon(
+                                Icons.arrow_forward_ios,
+                                color: Colors.grey,
+                                size: 16,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                  const SizedBox(height: 10),
-                  const Text(
-                    'Allowing other users to see you...',
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.grey,
-                    ),
-                  ),
-                  const SizedBox(height: 15),
-                  _buildSwitchRow('reading status', readingStatusEnabled,
-                      (value) {
-                    setState(() => readingStatusEnabled = value);
-                  }),
-                  _buildSwitchRow('reading time statistic', readingTimeEnabled,
-                      (value) {
-                    setState(() => readingTimeEnabled = value);
-                  }),
-                  _buildSwitchRow('book list', bookListEnabled, (value) {
-                    setState(() => bookListEnabled = value);
-                  }),
                 ],
               ),
             ),
-            const SizedBox(height: 30),
-
-            // 客服中心
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              decoration: BoxDecoration(
-                color: Colors.grey[200],
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: const Row(
-                children: [
-                  Text(
-                    'Customer service center',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
+            // 退出登录按钮移到底部
+            Padding(
+              padding: const EdgeInsets.only(bottom: 40),
+              child: Center(
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const LoginPage()),
+                      (route) => false,
+                    );
+                  },
+                  child: Container(
+                    width: 200,
+                    padding: const EdgeInsets.symmetric(vertical: 15),
+                    decoration: BoxDecoration(
+                      color: Colors.red[900],
+                      borderRadius: BorderRadius.circular(12),
                     ),
-                  ),
-                ],
-              ),
-            ),
-
-            const Spacer(),
-
-            // 登出按钮
-            Center(
-              child: Padding(
-                padding: const EdgeInsets.only(bottom: 20),
-                child: SizedBox(
-                  width: 150,
-                  height: 45,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const LoginPage()),
-                        (route) => false,
-                      );
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.grey[200],
-                      foregroundColor: Colors.black,
-                      elevation: 0,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                    ),
-                    child: const Text(
-                      'Log out',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
+                    child: const Center(
+                      child: Text(
+                        'Log out',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ),
@@ -1749,6 +2193,141 @@ class DetailsPage extends StatelessWidget {
               );
             }
           },
+        ),
+      ),
+    );
+  }
+
+  String _formatDate(DateTime date) {
+    final months = [
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December'
+    ];
+    return '${months[date.month - 1]} ${date.day}, ${date.year}';
+  }
+}
+
+class NewsDetailPage extends StatelessWidget {
+  final News news;
+
+  const NewsDetailPage({super.key, required this.news});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.black,
+      body: SafeArea(
+        child: Column(
+          children: [
+            // 顶部栏
+            Padding(
+              padding: const EdgeInsets.all(20),
+              child: Row(
+                children: [
+                  GestureDetector(
+                    onTap: () => Navigator.pop(context),
+                    child: Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: Colors.grey[900],
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Icon(Icons.arrow_back, color: Colors.grey[400]),
+                    ),
+                  ),
+                  const Expanded(
+                    child: Center(
+                      child: Text(
+                        'Finding News',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 40),
+                ],
+              ),
+            ),
+            // 新闻内容
+            Expanded(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Image.asset(
+                      news.imageUrl,
+                      width: double.infinity,
+                      height: 200,
+                      fit: BoxFit.cover,
+                    ),
+                    const SizedBox(height: 20),
+                    Text(
+                      news.title,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    Row(
+                      children: [
+                        Text(
+                          'by ${news.author}',
+                          style: TextStyle(
+                            color: Colors.grey[400],
+                            fontSize: 16,
+                            height: 1.5,
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        Container(
+                          width: 4,
+                          height: 4,
+                          decoration: BoxDecoration(
+                            color: Colors.grey[400],
+                            shape: BoxShape.circle,
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        Text(
+                          _formatDate(news.publishDate),
+                          style: TextStyle(
+                            color: Colors.grey[400],
+                            fontSize: 16,
+                            height: 1.5,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 20),
+                    Text(
+                      news.summary,
+                      style: TextStyle(
+                        color: Colors.grey[400],
+                        fontSize: 16,
+                        height: 1.5,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
