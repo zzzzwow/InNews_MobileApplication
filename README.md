@@ -1,16 +1,27 @@
-# innewsapp1
+# InNews: Your industry news assistant
 
-A new Flutter project.
+An application that is based on the APIs of multiple reliable news sources, combined with GPT's natural language processing capabilities to extract key information, enable users to effortlessly access the most current industry information and gain insights into emerging industry trends.
 
-## Getting Started
+## Use this README File 
 
-This project is a starting point for a Flutter application.
+Use this
 
-A few resources to get you started if this is your first Flutter project:
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## Installation
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Method 1: Download the apk and install into your android phone https://github.com/zzzzwow/InNews/releases/tag/v1.5.0 
+
+Method 2: clone this repository, open and run the under instructions with emulator:
+
+```
+flutter pub get
+```
+
+```
+flutter run
+```
+
+
+##  Contact Details
+
+Having Contact Details is also If you have any question, please contact author via email: qijingzeng03@gmail.com 
