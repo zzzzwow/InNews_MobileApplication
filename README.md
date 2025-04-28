@@ -7,7 +7,7 @@ An application that is based on the APIs of multiple reliable news sources, comb
 Use this
 
 ## Storyboard
-![Storyboard](https://1drv.ms/i/c/72ffc5bd8fd9644e/EW-A9E9ybIVMpm6Eduek0PABYWuf3e_kei7UwEu3k15q7w?e=cpHQHa)
+![Storyboard](https://1drv.ms/f/c/72ffc5bd8fd9644e/Ek44RkOlGClJhnA3uUn00LoBOHczwaqAcA7bNsqRp08q3Q?e=lQsvD7)
 ![Storyboard](image/storyboard.png "Storyboard Design")
  
 
