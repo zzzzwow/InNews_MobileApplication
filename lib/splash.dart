@@ -7,8 +7,9 @@ class SplashScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Future.delayed(Duration(seconds: 2), () {
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginPage()));
-    }); 
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => LoginPage()));
+    });
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -16,5 +17,4 @@ class SplashScreen extends StatelessWidget {
       child: Image.asset('assets/images/launch_image.png'),
     );
   }
-
 }

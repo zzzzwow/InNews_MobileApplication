@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
         scaffoldBackgroundColor: Colors.black,
         brightness: Brightness.dark,
       ),
-      home: SplashScreen(), // 设置初始页面为登录页面
+      home: SplashScreen(),
     );
   }
 }
@@ -45,42 +45,27 @@ class _LoginPageState extends State<LoginPage> {
         decoration: const BoxDecoration(
           color: Colors.black,
         ),
-        child: Stack(
-          children: [
-            SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'Welcome to\nLiteMate',
-                      style: TextStyle(
-                        fontSize: 28,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
-                    Positioned(
-                      right: 0,
-                      top: 45,
-                      child: Container(
-                        width: 8,
-                        height: 8,
-                        decoration: const BoxDecoration(
-                          color: Colors.orange,
-                          shape: BoxShape.circle,
-                        ),
-                      ),
-                    ),
-                  ],
+        child: SafeArea(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 100),
+              const Padding(
+                padding: EdgeInsets.only(left: 45),
+                child: Text(
+                  'more industry news',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
-            ),
-            Center(
-              child: Container(
+              const SizedBox(height: 30),
+              Container(
                 margin: const EdgeInsets.symmetric(horizontal: 25),
-                padding: const EdgeInsets.all(20),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
                 decoration: BoxDecoration(
                   color: Colors.grey[900],
                   borderRadius: BorderRadius.circular(20),
@@ -100,11 +85,12 @@ class _LoginPageState extends State<LoginPage> {
                           hintText: 'Email',
                           hintStyle: TextStyle(color: Colors.grey),
                           border: InputBorder.none,
-                          contentPadding: EdgeInsets.all(15),
+                          contentPadding: EdgeInsets.symmetric(
+                              vertical: 10, horizontal: 15),
                         ),
                       ),
                     ),
-                    const SizedBox(height: 15),
+                    const SizedBox(height: 12),
                     Container(
                       decoration: BoxDecoration(
                         color: Colors.grey[800],
@@ -118,11 +104,12 @@ class _LoginPageState extends State<LoginPage> {
                           hintText: 'Password',
                           hintStyle: TextStyle(color: Colors.grey),
                           border: InputBorder.none,
-                          contentPadding: EdgeInsets.all(15),
+                          contentPadding: EdgeInsets.symmetric(
+                              vertical: 10, horizontal: 15),
                         ),
                       ),
                     ),
-                    const SizedBox(height: 25),
+                    const SizedBox(height: 20),
                     ElevatedButton(
                       onPressed: () {
                         final email = _emailController.text;
@@ -206,8 +193,8 @@ class _LoginPageState extends State<LoginPage> {
                   ],
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -242,33 +229,46 @@ class _SignUpPageState extends State<SignUpPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SizedBox(height: 40),
-            // 返回按钮
+            const SizedBox(height: 20),
+            // return button
             IconButton(
               icon: const Icon(Icons.arrow_back, color: Colors.white),
               onPressed: () => Navigator.pop(context),
             ),
-            const SizedBox(height: 30),
-            // 欢迎文本
-            const Text(
-              'Welcome to\nLiteMate',
-              style: TextStyle(
-                fontSize: 28,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
+            const SizedBox(height: 15),
+            Padding(
+              padding: const EdgeInsets.only(left: 30),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: const [
+                  Text(
+                    'UNLOCK',
+                    style: TextStyle(
+                      color: Colors.red,
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    'more industry news',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
               ),
             ),
-            const SizedBox(height: 50),
-            // 输入框部分
+            const SizedBox(height: 20),
             Container(
-              padding: const EdgeInsets.all(20),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
               decoration: BoxDecoration(
                 color: Colors.grey[900],
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Column(
                 children: [
-                  // 用户名输入框
                   Container(
                     decoration: BoxDecoration(
                       color: Colors.grey[800],
@@ -281,12 +281,12 @@ class _SignUpPageState extends State<SignUpPage> {
                         labelText: 'Username',
                         labelStyle: TextStyle(color: Colors.grey),
                         border: InputBorder.none,
-                        contentPadding: EdgeInsets.all(15),
+                        contentPadding:
+                            EdgeInsets.symmetric(vertical: 10, horizontal: 15),
                       ),
                     ),
                   ),
-                  const SizedBox(height: 15),
-                  // 邮箱输入框
+                  const SizedBox(height: 12),
                   Container(
                     decoration: BoxDecoration(
                       color: Colors.grey[800],
@@ -299,12 +299,12 @@ class _SignUpPageState extends State<SignUpPage> {
                         labelText: 'Email',
                         labelStyle: TextStyle(color: Colors.grey),
                         border: InputBorder.none,
-                        contentPadding: EdgeInsets.all(15),
+                        contentPadding:
+                            EdgeInsets.symmetric(vertical: 10, horizontal: 15),
                       ),
                     ),
                   ),
-                  const SizedBox(height: 15),
-                  // 密码输入框
+                  const SizedBox(height: 12),
                   Container(
                     decoration: BoxDecoration(
                       color: Colors.grey[800],
@@ -318,12 +318,12 @@ class _SignUpPageState extends State<SignUpPage> {
                         labelText: 'Password',
                         labelStyle: TextStyle(color: Colors.grey),
                         border: InputBorder.none,
-                        contentPadding: EdgeInsets.all(15),
+                        contentPadding:
+                            EdgeInsets.symmetric(vertical: 10, horizontal: 15),
                       ),
                     ),
                   ),
-                  const SizedBox(height: 25),
-                  // 注册按钮
+                  const SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: () async {
                       UserData.addUser(
@@ -332,9 +332,20 @@ class _SignUpPageState extends State<SignUpPage> {
                         _usernameController.text,
                       );
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('registered successfully'),
-                          duration: Duration(seconds: 2),
+                        SnackBar(
+                          content: const Text(
+                            'registered successfully',
+                            style: TextStyle(color: Colors.white),
+                            textAlign: TextAlign.center,
+                          ),
+                          backgroundColor: const Color(0xFF424242),
+                          duration: const Duration(seconds: 2),
+                          behavior: SnackBarBehavior.floating,
+                          margin: const EdgeInsets.only(
+                            bottom: 10,
+                            left: 10,
+                            right: 10,
+                          ),
                         ),
                       );
                       await Future.delayed(const Duration(seconds: 2));
@@ -377,21 +388,21 @@ class _SignUpPageState extends State<SignUpPage> {
 }
 
 class BlankPage extends StatefulWidget {
-  final int initialIndex; // 添加初始索引参数
+  final int initialIndex;
 
-  const BlankPage({super.key, this.initialIndex = 0}); // 默认为0（Findings页面）
+  const BlankPage({super.key, this.initialIndex = 0});
 
   @override
   State<BlankPage> createState() => _BlankPageState();
 }
 
 class _BlankPageState extends State<BlankPage> {
-  late int _selectedIndex; // 改为 late 初始化
+  late int _selectedIndex;
 
   @override
   void initState() {
     super.initState();
-    _selectedIndex = widget.initialIndex; // 使用传入的初始索引
+    _selectedIndex = widget.initialIndex;
   }
 
   final List<Widget> _pages = [
@@ -460,23 +471,30 @@ class _FindingsPageState extends State<FindingsPage> {
   double _lastY = 0;
   double _lastZ = 0;
   DateTime _lastShakeTime = DateTime.now();
+  Map<String, bool> collectedNews = {};
 
   @override
   void initState() {
     super.initState();
-    // 获取所有新闻并随机排序
     shuffledNews = List.from(NewsData.allNews)..shuffle();
 
-    // 监听加速度传感器
+    // Listening to accelerometers
     accelerometerEvents.listen((AccelerometerEvent event) {
       _handleShake(event);
+    });
+
+    // add listener
+    CollectedNewsData.addListener(() {
+      if (mounted) {
+        setState(() {});
+      }
     });
   }
 
   void _handleShake(AccelerometerEvent event) {
     final now = DateTime.now();
     if (now.difference(_lastShakeTime) < const Duration(milliseconds: 500)) {
-      return; // 防止过于频繁的触发
+      return; // prevent frequent triggers
     }
 
     final double x = event.x;
@@ -487,7 +505,7 @@ class _FindingsPageState extends State<FindingsPage> {
     final double deltaY = (y - _lastY).abs();
     final double deltaZ = (z - _lastZ).abs();
 
-    // 如果加速度变化超过阈值，认为是摇晃
+    // If the acceleration changes exceeds the threshold, it is considered a shake
     if (deltaX > 10 || deltaY > 10 || deltaZ > 10) {
       _lastShakeTime = now;
       _carouselController.nextPage(
@@ -501,7 +519,7 @@ class _FindingsPageState extends State<FindingsPage> {
     _lastZ = z;
   }
 
-  // 计算文本行数的函数
+  // Function to calculate the number of text lines
   int _calculateMaxLines(String text, double maxWidth, double maxHeight,
       double fontSize, double lineHeight) {
     final textPainter = TextPainter(
@@ -517,27 +535,51 @@ class _FindingsPageState extends State<FindingsPage> {
       textDirection: TextDirection.ltr,
     );
 
-    // 考虑内边距
-    final padding = 20.0 * 2; // 左右内边距
+    // Consider padding
+    final padding = 20.0 * 2; // left and right padding
     final availableWidth = maxWidth - padding;
 
     textPainter.layout(maxWidth: availableWidth);
     final lineMetrics = textPainter.computeLineMetrics();
 
-    // 计算实际可见区域的高度
+    // Calculate the actual visible area height
     final containerHeight = maxHeight;
     final lineHeightPx = fontSize * lineHeight;
     final maxVisibleLines = (containerHeight / lineHeightPx).floor();
 
-    // 返回较小的值，确保文本不会超出容器
+    // Return the smaller value to ensure that the text does not exceed the container
     return lineMetrics.length > maxVisibleLines
         ? maxVisibleLines
         : lineMetrics.length;
   }
 
+  // Modify the collection button build method
+  Widget _buildCollectionButton(News news) {
+    final isCollected = CollectedNewsData.isNewsCollected(news);
+    return IconButton(
+      icon: Icon(
+        Icons.bookmark_outline,
+        color: isCollected ? Colors.red : Colors.grey[400],
+      ),
+      onPressed: () {
+        setState(() {
+          if (!isCollected) {
+            CollectedNewsData.addNews(news);
+          } else {
+            CollectedNewsData.removeNews(news);
+          }
+        });
+      },
+    );
+  }
+
   @override
   void dispose() {
     _pageController.dispose();
+    // remove listener
+    CollectedNewsData.removeListener(() {
+      setState(() {});
+    });
     super.dispose();
   }
 
@@ -548,7 +590,6 @@ class _FindingsPageState extends State<FindingsPage> {
       body: SafeArea(
         child: Column(
           children: [
-            // 保持原有的顶部标题栏
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 15, 20, 20),
               child: Row(
@@ -659,7 +700,6 @@ class _FindingsPageState extends State<FindingsPage> {
                                     ),
                                     child: Column(
                                       children: [
-                                        // 图片部分保持不变
                                         ClipRRect(
                                           borderRadius: const BorderRadius.only(
                                             topLeft: Radius.circular(15),
@@ -672,7 +712,6 @@ class _FindingsPageState extends State<FindingsPage> {
                                             fit: BoxFit.cover,
                                           ),
                                         ),
-                                        // 内容部分调整
                                         Expanded(
                                           child: Padding(
                                             padding: const EdgeInsets.fromLTRB(
@@ -749,6 +788,13 @@ class _FindingsPageState extends State<FindingsPage> {
                                     onPressed: () {
                                       final textController =
                                           TextEditingController();
+                                      // Check if there is already a note and set the initial value
+                                      final existingNote =
+                                          NoteData.getNoteForNews(news.title);
+                                      if (existingNote != null) {
+                                        textController.text = existingNote;
+                                      }
+
                                       showDialog(
                                         context: context,
                                         builder: (context) => AlertDialog(
@@ -794,24 +840,39 @@ class _FindingsPageState extends State<FindingsPage> {
                                               onPressed: () {
                                                 if (textController
                                                     .text.isNotEmpty) {
-                                                  final note = Note(
-                                                    content:
-                                                        textController.text,
-                                                    createTime: DateTime.now(),
-                                                    newsTitle: news.title,
-                                                    newsSummary: news.summary,
-                                                    newsImageUrl: news.imageUrl,
+                                                  // Use the new method to update the note
+                                                  NoteData.updateNote(
+                                                    news.title,
+                                                    textController.text,
+                                                    news.summary,
+                                                    news.imageUrl,
                                                   );
-                                                  NoteData.notes.add(note);
                                                   Navigator.pop(context);
-                                                  // 可以添加一个提示
+
                                                   ScaffoldMessenger.of(context)
                                                       .showSnackBar(
-                                                    const SnackBar(
-                                                      content: Text(
-                                                          'Note saved successfully!'),
-                                                      duration:
-                                                          Duration(seconds: 2),
+                                                    SnackBar(
+                                                      content: const Text(
+                                                        'note saved successfully',
+                                                        style: TextStyle(
+                                                            color:
+                                                                Colors.white),
+                                                        textAlign:
+                                                            TextAlign.center,
+                                                      ),
+                                                      backgroundColor:
+                                                          const Color(
+                                                              0xFF424242),
+                                                      duration: const Duration(
+                                                          seconds: 2),
+                                                      behavior: SnackBarBehavior
+                                                          .floating,
+                                                      margin:
+                                                          const EdgeInsets.only(
+                                                        bottom: 10,
+                                                        left: 10,
+                                                        right: 10,
+                                                      ),
                                                     ),
                                                   );
                                                 }
@@ -827,29 +888,7 @@ class _FindingsPageState extends State<FindingsPage> {
                                       );
                                     },
                                   ),
-                                  const SizedBox(width: 10),
-                                  IconButton(
-                                    icon: const Icon(Icons.bookmark_border),
-                                    color: Colors.grey[400],
-                                    onPressed: () {
-                                      // 添加到收藏
-                                      CollectedNewsData.collectedNews.add(
-                                        CollectedNews(
-                                          news: news,
-                                          collectTime: DateTime.now(),
-                                        ),
-                                      );
-                                      // 显示提示
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(
-                                        const SnackBar(
-                                          content: Text(
-                                              'News collected successfully!'),
-                                          duration: Duration(seconds: 2),
-                                        ),
-                                      );
-                                    },
-                                  ),
+                                  _buildCollectionButton(news),
                                 ],
                               )
                             ],
@@ -913,7 +952,7 @@ class _CollectionsPageState extends State<CollectionsPage> {
       body: SafeArea(
         child: Column(
           children: [
-            // 顶部标签选择器
+            // Top tag selector
             Container(
               padding: const EdgeInsets.all(20),
               child: Row(
@@ -925,7 +964,7 @@ class _CollectionsPageState extends State<CollectionsPage> {
                 ],
               ),
             ),
-            // 内容区域
+            // Content area
             Expanded(
               child: selectedTab == 'Notes'
                   ? _buildNotesView()
@@ -951,7 +990,7 @@ class _CollectionsPageState extends State<CollectionsPage> {
             title,
             style: TextStyle(
               color: isSelected ? Colors.white : Colors.grey,
-              fontSize: 20, // 修改为与Findings页面一致的字体大小
+              fontSize: 20,
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -1044,10 +1083,9 @@ class _CollectionsPageState extends State<CollectionsPage> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            // 新闻信息部分
                             Row(
                               children: [
-                                // 新闻图片
+                                // News image
                                 ClipRRect(
                                   borderRadius: const BorderRadius.only(
                                     topLeft: Radius.circular(15),
@@ -1061,7 +1099,7 @@ class _CollectionsPageState extends State<CollectionsPage> {
                                   ),
                                 ),
                                 const SizedBox(width: 15),
-                                // 新闻标题和摘要
+                                // News title and summary
                                 Expanded(
                                   child: Column(
                                     crossAxisAlignment:
@@ -1092,7 +1130,7 @@ class _CollectionsPageState extends State<CollectionsPage> {
                                 ),
                               ],
                             ),
-                            // 用户笔记部分
+                            // User note part
                             Padding(
                               padding: const EdgeInsets.all(15),
                               child: Column(
@@ -1128,19 +1166,19 @@ class _CollectionsPageState extends State<CollectionsPage> {
   }
 
   Widget _buildCollectedNewsView() {
-    // 根据选择的分类筛选新闻
+    // Filter news based on the selected category
     final filteredNews = selectedCategory == 'all'
         ? CollectedNewsData.collectedNews
         : CollectedNewsData.collectedNews
             .where((item) => item.news.category == selectedCategory)
             .toList();
 
-    // 按收藏时间倒序排序
+    // Sort by collection time in descending order
     filteredNews.sort((a, b) => b.collectTime.compareTo(a.collectTime));
 
     return Column(
       children: [
-        // 分类选项
+        // Category options
         Container(
           height: 40,
           margin: const EdgeInsets.only(bottom: 20),
@@ -1181,7 +1219,7 @@ class _CollectionsPageState extends State<CollectionsPage> {
                 .toList(),
           ),
         ),
-        // 新闻列表
+        // News list
         Expanded(
           child: ListView.builder(
             padding: const EdgeInsets.all(20),
@@ -1284,6 +1322,50 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingPageState extends State<SettingsPage> {
+  Widget _buildSettingButton({
+    required String title,
+    required VoidCallback onTap,
+    required BuildContext context,
+  }) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 20),
+      child: Material(
+        // Use Material to get water wave effect
+        color: Colors.transparent,
+        child: InkWell(
+          // Use InkWell instead of GestureDetector
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(12),
+          child: Ink(
+            // Use Ink to set background
+            padding: const EdgeInsets.all(15),
+            decoration: BoxDecoration(
+              color: Colors.grey[900],
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Row(
+              children: [
+                Text(
+                  title,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                  ),
+                ),
+                const Spacer(),
+                Icon(
+                  Icons.arrow_forward_ios,
+                  color: Colors.grey,
+                  size: 16,
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -1291,7 +1373,6 @@ class _SettingPageState extends State<SettingsPage> {
       body: SafeArea(
         child: Column(
           children: [
-            // 顶部标题栏
             Container(
               padding: const EdgeInsets.all(20),
               child: const Center(
@@ -1305,98 +1386,69 @@ class _SettingPageState extends State<SettingsPage> {
                 ),
               ),
             ),
-            // 设置选项列表
-            Expanded(
+            Padding(
+              padding: const EdgeInsets.all(20),
               child: Column(
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.all(20),
-                    child: Column(
-                      children: [
-                        // 账户信息
-                        Container(
-                          padding: const EdgeInsets.all(15),
-                          decoration: BoxDecoration(
-                            color: Colors.grey[900],
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: const Row(
-                            children: [
-                              Text(
-                                'Account Information',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 16,
-                                ),
+                  _buildSettingButton(
+                    title: 'Account Information',
+                    onTap: () {
+                      // Account information button click event
+                    },
+                    context: context,
+                  ),
+                  _buildSettingButton(
+                    title: 'Clear the Coach',
+                    onTap: () {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Container(
+                            padding: const EdgeInsets.symmetric(vertical: 10),
+                            child: const Text(
+                              'Cache cleared successfully',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w500,
                               ),
-                              Spacer(),
-                              Icon(
-                                Icons.arrow_forward_ios,
-                                color: Colors.grey,
-                                size: 16,
-                              ),
-                            ],
+                              textAlign: TextAlign.center,
+                            ),
                           ),
+                          backgroundColor: Colors.white.withOpacity(0.4),
+                          duration: const Duration(seconds: 1),
+                          behavior: SnackBarBehavior.floating,
+                          margin: EdgeInsets.only(
+                            bottom: MediaQuery.of(context).size.height * 0.25,
+                            left: MediaQuery.of(context).size.width * 0.2,
+                            right: MediaQuery.of(context).size.width * 0.2,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          elevation: 20,
                         ),
-                        const SizedBox(height: 20),
-                        // 隐私设置
-                        Container(
-                          padding: const EdgeInsets.all(15),
-                          decoration: BoxDecoration(
-                            color: Colors.grey[900],
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: const Row(
-                            children: [
-                              Text(
-                                'Privacy',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 16,
-                                ),
-                              ),
-                              Spacer(),
-                              Icon(
-                                Icons.arrow_forward_ios,
-                                color: Colors.grey,
-                                size: 16,
-                              ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(height: 20),
-                        // 用户服务中心
-                        Container(
-                          padding: const EdgeInsets.all(15),
-                          decoration: BoxDecoration(
-                            color: Colors.grey[900],
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: const Row(
-                            children: [
-                              Text(
-                                "User's Service Center", // 修改文本
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 16,
-                                ),
-                              ),
-                              Spacer(),
-                              Icon(
-                                Icons.arrow_forward_ios,
-                                color: Colors.grey,
-                                size: 16,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
+                      );
+                    },
+                    context: context,
+                  ),
+                  _buildSettingButton(
+                    title: 'Privacy',
+                    onTap: () {
+                      // Privacy settings button click event
+                    },
+                    context: context,
+                  ),
+                  _buildSettingButton(
+                    title: "User's Service Center",
+                    onTap: () {
+                      // User service center button click event
+                    },
+                    context: context,
                   ),
                 ],
               ),
             ),
-            // 退出登录按钮移到底部
+            const Spacer(),
             Padding(
               padding: const EdgeInsets.only(bottom: 40),
               child: Center(
@@ -1482,7 +1534,7 @@ class _CategoryPageState extends State<CategoryPage> {
       body: SafeArea(
         child: Column(
           children: [
-            // 顶部导航栏
+            // Top navigation bar
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 15, 20, 20),
               child: Row(
@@ -1515,7 +1567,7 @@ class _CategoryPageState extends State<CategoryPage> {
                 ],
               ),
             ),
-            // 分类选项
+            // Category options
             Container(
               height: 40,
               margin: const EdgeInsets.only(bottom: 20),
@@ -1557,7 +1609,7 @@ class _CategoryPageState extends State<CategoryPage> {
                     .toList(),
               ),
             ),
-            // 新闻列表
+            // News list
             Expanded(
               child: ListView.builder(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -1634,7 +1686,7 @@ class _CategoryPageState extends State<CategoryPage> {
           ],
         ),
       ),
-      // 添加底部导航栏
+      // Add bottom navigation bar
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
           color: Colors.grey[900],
@@ -1710,7 +1762,7 @@ class SearchPage extends StatefulWidget {
 
 class _SearchPageState extends State<SearchPage> {
   final TextEditingController _searchController = TextEditingController();
-  List<News>? searchResults; // 用于存储搜索结果
+  List<News>? searchResults; // for storing search results
 
   void _performSearch() {
     final searchTerm = _searchController.text.toLowerCase();
@@ -1735,7 +1787,6 @@ class _SearchPageState extends State<SearchPage> {
       body: SafeArea(
         child: Column(
           children: [
-            // 标题栏保持不变
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 15, 20, 20),
               child: Row(
@@ -1768,7 +1819,7 @@ class _SearchPageState extends State<SearchPage> {
                 ],
               ),
             ),
-            // 搜索框和按钮
+            // Search box and button
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Row(
@@ -1812,13 +1863,13 @@ class _SearchPageState extends State<SearchPage> {
               ),
             ),
             const SizedBox(height: 20),
-            // 搜索结果
+            // Search results
             Expanded(
               child: searchResults == null
-                  ? const SizedBox() // 未搜索时显示空
+                  ? const SizedBox() // When not searched, display empty
                   : searchResults!.isEmpty
                       ? const Center(
-                          // 无结果时显示提示
+                          // When no result, display prompt
                           child: Text(
                             'No related result',
                             style: TextStyle(
@@ -1828,7 +1879,7 @@ class _SearchPageState extends State<SearchPage> {
                           ),
                         )
                       : ListView.builder(
-                          // 有结果时显示列表
+                          // When there is a result, display the list
                           padding: const EdgeInsets.symmetric(horizontal: 20),
                           itemCount: searchResults!.length,
                           itemBuilder: (context, index) {
@@ -1905,7 +1956,6 @@ class _SearchPageState extends State<SearchPage> {
           ],
         ),
       ),
-      // 添加底部导航栏
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
           color: Colors.grey[900],
@@ -1938,13 +1988,15 @@ class _SearchPageState extends State<SearchPage> {
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => const BlankPage(initialIndex: 1)),
+                  builder: (context) => const BlankPage(initialIndex: 1),
+                ),
               );
             } else if (index == 2) {
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => const BlankPage(initialIndex: 2)),
+                  builder: (context) => const BlankPage(initialIndex: 2),
+                ),
               );
             }
           },
@@ -1978,11 +2030,55 @@ class _SearchPageState extends State<SearchPage> {
   }
 }
 
-// 添加 DetailsPage
-class DetailsPage extends StatelessWidget {
+// Add DetailsPage
+class DetailsPage extends StatefulWidget {
   final News news;
 
   const DetailsPage({Key? key, required this.news}) : super(key: key);
+
+  @override
+  State<DetailsPage> createState() => _DetailsPageState();
+}
+
+class _DetailsPageState extends State<DetailsPage> {
+  late bool isCollected;
+  String? currentNote;
+
+  @override
+  void initState() {
+    super.initState();
+    isCollected = CollectedNewsData.isNewsCollected(widget.news);
+    // Check if there is already a note when initialized
+    currentNote = NoteData.getNoteForNews(widget.news.title);
+    // Add listener
+    CollectedNewsData.addListener(() {
+      if (mounted) {
+        setState(() {
+          isCollected = CollectedNewsData.isNewsCollected(widget.news);
+        });
+      }
+    });
+  }
+
+  // Modify the update note method to accept nullable String
+  void _updateNote(String? note) {
+    setState(() {
+      currentNote = note;
+    });
+  }
+
+  // Handle the collection button click
+  void _handleCollectionTap() {
+    setState(() {
+      if (!isCollected) {
+        CollectedNewsData.addNews(widget.news);
+        isCollected = true;
+      } else {
+        CollectedNewsData.removeNews(widget.news);
+        isCollected = false;
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -1991,7 +2087,6 @@ class DetailsPage extends StatelessWidget {
       body: SafeArea(
         child: Column(
           children: [
-            // 顶部导航栏 - 固定不动
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 15, 20, 20),
               child: Row(
@@ -2024,17 +2119,16 @@ class DetailsPage extends StatelessWidget {
                 ],
               ),
             ),
-            // 可滚动内容区域
+            // Scrollable content area
             Expanded(
               child: SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // 图片和标题
                     Stack(
                       children: [
                         Image.asset(
-                          news.imageUrl,
+                          widget.news.imageUrl,
                           width: double.infinity,
                           height: 200,
                           fit: BoxFit.cover,
@@ -2060,7 +2154,7 @@ class DetailsPage extends StatelessWidget {
                           left: 16,
                           right: 16,
                           child: Text(
-                            news.title,
+                            widget.news.title,
                             style: const TextStyle(
                               color: Colors.white,
                               fontSize: 24,
@@ -2070,7 +2164,6 @@ class DetailsPage extends StatelessWidget {
                         ),
                       ],
                     ),
-                    // 作者和发布时间等信息
                     Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: Column(
@@ -2088,7 +2181,7 @@ class DetailsPage extends StatelessWidget {
                                   ),
                                 ),
                                 TextSpan(
-                                  text: news.author,
+                                  text: widget.news.author,
                                   style: const TextStyle(
                                     color: Colors.white,
                                     fontSize: 18,
@@ -2110,7 +2203,7 @@ class DetailsPage extends StatelessWidget {
                                   ),
                                 ),
                                 TextSpan(
-                                  text: _formatDate(news.publishDate),
+                                  text: _formatDate(widget.news.publishDate),
                                   style: const TextStyle(
                                     color: Colors.white,
                                     fontSize: 18,
@@ -2120,6 +2213,164 @@ class DetailsPage extends StatelessWidget {
                             ),
                           ),
                           const SizedBox(height: 24),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              const SizedBox(width: 10),
+                              IconButton(
+                                icon: Icon(
+                                  Icons.edit_note,
+                                  color: Colors.grey[400],
+                                ),
+                                onPressed: () {
+                                  final textController =
+                                      TextEditingController();
+                                  // Check if there is already a note and set the initial value
+                                  final existingNote = NoteData.getNoteForNews(
+                                      widget.news.title);
+                                  if (existingNote != null) {
+                                    textController.text = existingNote;
+                                  }
+
+                                  showModalBottomSheet(
+                                    context: context,
+                                    backgroundColor: Colors.grey[900],
+                                    isScrollControlled: true,
+                                    builder: (context) => Padding(
+                                      padding: EdgeInsets.only(
+                                        bottom: MediaQuery.of(context)
+                                            .viewInsets
+                                            .bottom,
+                                      ),
+                                      child: Container(
+                                        padding: const EdgeInsets.all(20),
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            TextField(
+                                              controller: textController,
+                                              style: const TextStyle(
+                                                  color: Colors.white),
+                                              decoration: InputDecoration(
+                                                hintText:
+                                                    'Add your notes here...',
+                                                hintStyle: TextStyle(
+                                                    color: Colors.grey[400]),
+                                                border: InputBorder.none,
+                                              ),
+                                              maxLines: 3,
+                                            ),
+                                            const SizedBox(height: 20),
+                                            ElevatedButton(
+                                              onPressed: () {
+                                                final noteText =
+                                                    textController.text.trim();
+                                                if (noteText.isNotEmpty) {
+                                                  // When there is content, save the note
+                                                  NoteData.updateNote(
+                                                    widget.news.title,
+                                                    noteText,
+                                                    widget.news.summary,
+                                                    widget.news.imageUrl,
+                                                  );
+                                                  _updateNote(
+                                                      noteText); // Update display
+                                                  Navigator.pop(context);
+
+                                                  ScaffoldMessenger.of(context)
+                                                      .showSnackBar(
+                                                    SnackBar(
+                                                      content: const Text(
+                                                        'note saved successfully',
+                                                        style: TextStyle(
+                                                            color:
+                                                                Colors.white),
+                                                        textAlign:
+                                                            TextAlign.center,
+                                                      ),
+                                                      backgroundColor:
+                                                          const Color(
+                                                              0xFF424242),
+                                                      duration: const Duration(
+                                                          seconds: 2),
+                                                      behavior: SnackBarBehavior
+                                                          .floating,
+                                                      margin:
+                                                          const EdgeInsets.only(
+                                                        bottom: 10,
+                                                        left: 10,
+                                                        right: 10,
+                                                      ),
+                                                    ),
+                                                  );
+                                                } else {
+                                                  // When the content is empty, delete the note
+                                                  NoteData.deleteNote(
+                                                      widget.news.title);
+                                                  _updateNote(
+                                                      ''); // 清除显示，使用空字符串而不是null
+                                                  Navigator.pop(context);
+                                                }
+                                              },
+                                              style: ElevatedButton.styleFrom(
+                                                backgroundColor: Colors.white,
+                                                foregroundColor: Colors.black,
+                                              ),
+                                              child: const Text('Save'),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
+                              const SizedBox(width: 10),
+                              IconButton(
+                                icon: Icon(
+                                  Icons.bookmark_outline,
+                                  color: isCollected
+                                      ? Colors.red
+                                      : Colors.grey[400],
+                                ),
+                                onPressed: _handleCollectionTap,
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 20),
+                          if (currentNote != null) ...[
+                            Container(
+                              margin:
+                                  const EdgeInsets.symmetric(horizontal: 16),
+                              padding: const EdgeInsets.all(15),
+                              decoration: BoxDecoration(
+                                color: Colors.grey[900],
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text(
+                                    'Your Notes:',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 8),
+                                  Text(
+                                    currentNote!,
+                                    style: TextStyle(
+                                      color: Colors.grey[400],
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(height: 24),
+                          ],
                           const Text(
                             'Abstract',
                             style: TextStyle(
@@ -2130,14 +2381,13 @@ class DetailsPage extends StatelessWidget {
                           ),
                           const SizedBox(height: 8),
                           Text(
-                            news.summary,
+                            widget.news.summary,
                             style: TextStyle(
                               color: Colors.grey[400],
                               fontSize: 16,
                             ),
                             textAlign: TextAlign.justify,
                           ),
-                          // 添加底部间距，确保内容不会被底部导航栏遮挡
                           const SizedBox(height: 20),
                         ],
                       ),
@@ -2215,6 +2465,15 @@ class DetailsPage extends StatelessWidget {
     ];
     return '${months[date.month - 1]} ${date.day}, ${date.year}';
   }
+
+  @override
+  void dispose() {
+    // Remove listener
+    CollectedNewsData.removeListener(() {
+      setState(() {});
+    });
+    super.dispose();
+  }
 }
 
 class NewsDetailPage extends StatelessWidget {
@@ -2229,7 +2488,6 @@ class NewsDetailPage extends StatelessWidget {
       body: SafeArea(
         child: Column(
           children: [
-            // 顶部栏
             Padding(
               padding: const EdgeInsets.all(20),
               child: Row(
@@ -2261,7 +2519,6 @@ class NewsDetailPage extends StatelessWidget {
                 ],
               ),
             ),
-            // 新闻内容
             Expanded(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.all(20),

@@ -1,4 +1,3 @@
-// 定义新闻类
 class News {
   final String title;
   final String imageUrl;
@@ -7,8 +6,8 @@ class News {
   final DateTime publishDate;
   final String author;
   final String category;
-  final String sourceUrl; // 新闻来源链接
-  final List<String> keyPoints; // 添加知识点列表
+  final String sourceUrl; 
+  final List<String> keyPoints; 
 
   News({
     required this.title,
@@ -23,10 +22,10 @@ class News {
   });
 }
 
-// 新闻数据
+// news data
 class NewsData {
   static final List<News> allNews = [
-    // Technology 类新闻
+    // Technology 
     News(
       category: 'Technology',
       title: 'Anthropic CEO wants to open the black box of AI models by 2027',
@@ -118,7 +117,7 @@ class NewsData {
       ],
     ),
 
-    // Healthcare & Medical 类新闻
+    // Healthcare & Medical 
     News(
       category: 'Healthcare & Medical',
       title: 'Plan for GPs to keep millions out of hospital',
@@ -210,7 +209,7 @@ class NewsData {
       ],
     ),
 
-    // Tourism 类新闻
+    // Tourism
     News(
       category: 'Tourism',
       title:
@@ -299,7 +298,7 @@ class NewsData {
       ],
     ),
 
-    // Education 类新闻
+    // Education
     News(
       category: 'Education',
       title:
@@ -391,7 +390,7 @@ class NewsData {
       ],
     ),
 
-    // Environment & Energy 类新闻
+    // Environment & Energy
     News(
       category: 'Environment & Energy',
       title: 'Annual energy bills predicted to fall by £166 in July',
@@ -481,12 +480,12 @@ class NewsData {
     ),
   ];
 
-  // 按类别获取新闻
+  // get news by category
   static List<News> getNewsByCategory(String category) {
     return allNews.where((news) => news.category == category).toList();
   }
 
-  // 获取所有新闻类别
+  // get all news categories
   static List<String> getAllCategories() {
     return [
       'Technology',
@@ -497,7 +496,7 @@ class NewsData {
     ];
   }
 
-  // 搜索新闻
+
   static List<News> searchNews(String query) {
     query = query.toLowerCase();
     return allNews
@@ -508,7 +507,7 @@ class NewsData {
         .toList();
   }
 
-  // 可以添加一个测试方法来验证
+
   static void testTourismNews() {
     var tourismNews = getNewsByCategory('Tourism');
     print('Tourism news count: ${tourismNews.length}');
