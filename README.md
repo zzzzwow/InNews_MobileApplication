@@ -7,7 +7,7 @@ An application that is based on the APIs of multiple reliable news sources, comb
 Use this
 
 ## Storyboard
-![storyboard](image/storyboard.png "design")
+![Storyboard](image/storyboard.png "Storyboard Design")
  
 
 ## Installation
