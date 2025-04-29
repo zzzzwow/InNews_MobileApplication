@@ -7,6 +7,7 @@ Landing page: [https://zzzzwow.github.io/InNews/]
 
 ## Storyboard
 ![storyboard](images/storyboard.png)
+![storyboard](https://raw.githubusercontent.com/zzzxwow/InNews_MobileApplication/main/images/storyboard.png)
 
  
 
