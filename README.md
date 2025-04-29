@@ -6,7 +6,7 @@ Landing page: [https://zzzzwow.github.io/InNews/]
 
 
 ## Storyboard
-![Storyboard](images/storyboard.png "Storyboard Design")
+![storyboard](images/storyboard.png)
 
  
 
