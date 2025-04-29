@@ -2,9 +2,8 @@
 
 An application that is based on the APIs of multiple reliable news sources, combined with GPT's natural language processing capabilities to extract key information, enable users to effortlessly access the most current industry information and gain insights into emerging industry trends.
 
-## Use this README File 
+Landing page: https://zeyiyu.github.io/EventGatherLandingPage/
 
-Use this
 
 ## Storyboard
 ![Storyboard](https://drive.google.com/file/d/1XzabreltgONXQTZSQDGydJFQBADQ92v8/view?usp=drive_link)
