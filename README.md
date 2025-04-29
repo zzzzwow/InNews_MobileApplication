@@ -7,9 +7,11 @@ An application that is based on the APIs of multiple reliable news sources, comb
 Use this
 
 ## Storyboard
-![Storyboard](https://1drv.ms/i/c/72ffc5bd8fd9644e/EW-A9E9ybIVMpm6Eduek0PABw31DkZyYt3YHh3KChnYcTw?e=atYaUd)
+![Storyboard](https://drive.google.com/file/d/1XzabreltgONXQTZSQDGydJFQBADQ92v8/view?usp=drive_link)
 ![Storyboard Image](https://1drv.ms/i/c/72ffc5bd8fd9644e/EW-A9E9ybIVMpm6Eduek0PABw31DkZyYt3YHh3KChnYcTw?e=atYaUd "Storyboard Design")
 ![Storyboard](image/storyboard.png "Storyboard Design")
+
+https://drive.google.com/file/d/1XzabreltgONXQTZSQDGydJFQBADQ92v8/view?usp=drive_link
  
 
 ## Installation
