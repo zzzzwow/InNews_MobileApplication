@@ -9,7 +9,7 @@ Use this
 ## Storyboard
 ![Storyboard](https://drive.google.com/file/d/1XzabreltgONXQTZSQDGydJFQBADQ92v8/view?usp=drive_link)
 ![Storyboard Image](https://drive.google.com/file/d/1XzabreltgONXQTZSQDGydJFQBADQ92v8/view?usp=sharing "Storyboard Design")
-![Storyboard](image/storyboard.png "Storyboard Design")
+![Storyboard](images/storyboard.png "Storyboard Design")
 
 https://drive.google.com/file/d/1XzabreltgONXQTZSQDGydJFQBADQ92v8/view?usp=drive_link
  
